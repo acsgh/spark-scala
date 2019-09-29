@@ -9,7 +9,7 @@ import io.swagger.v3.oas.models.headers.Header
 import io.swagger.v3.oas.models.info._
 import io.swagger.v3.oas.models.links.Link
 import io.swagger.v3.oas.models.media.Encoding.StyleEnum
-import io.swagger.v3.oas.models.media.{Content, Encoding, MediaType, Schema, StringSchema}
+import io.swagger.v3.oas.models.media._
 import io.swagger.v3.oas.models.parameters.{RequestBody, Parameter => SwaggerParameter}
 import io.swagger.v3.oas.models.responses.{ApiResponse, ApiResponses}
 import io.swagger.v3.oas.models.security.SecurityRequirement
@@ -40,7 +40,7 @@ trait OpenApiBuilder {
     tags: List[Tag] = null,
     paths: Paths = null,
     components: Components = null,
-    extensions: Map[String, AnyRef] = null
+    extensions: Map[String, Any] = null
   ): OpenAPI = {
     val result = new OpenAPI()
     result.openapi(openapi)
@@ -51,7 +51,7 @@ trait OpenApiBuilder {
     result.tags(tags.asJava)
     result.paths(paths)
     result.components(components)
-    result.extensions(extensions.asJava)
+    //result.extensions(extensions.asJava)
     result
   }
 
@@ -63,7 +63,7 @@ trait OpenApiBuilder {
     contact: Contact = null,
     license: License = null,
     version: String = null,
-    extensions: Map[String, AnyRef] = null
+    extensions: Map[String, Any] = null
   ): Info = {
     val result = new Info()
     result.title(title)
@@ -72,7 +72,7 @@ trait OpenApiBuilder {
     result.contact(contact)
     result.license(license)
     result.version(version)
-    result.setExtensions(extensions.asJava)
+    ////result.setExtensions(extensions.asJava)
     result
   }
 
@@ -81,13 +81,13 @@ trait OpenApiBuilder {
     name: String = null,
     url: String = null,
     email: String = null,
-    extensions: Map[String, AnyRef] = null
+    extensions: Map[String, Any] = null
   ): Contact = {
     val result = new Contact()
     result.name(name)
     result.url(url)
     result.email(email)
-    result.setExtensions(extensions.asJava)
+    //result.setExtensions(extensions.asJava)
     result
   }
 
@@ -96,12 +96,12 @@ trait OpenApiBuilder {
     name: String = null,
     url: String = null,
     email: String = null,
-    extensions: Map[String, AnyRef] = null
+    extensions: Map[String, Any] = null
   ): License = {
     val result = new License()
     result.name(name)
     result.url(url)
-    result.setExtensions(extensions.asJava)
+    //result.setExtensions(extensions.asJava)
     result
   }
 
@@ -110,24 +110,24 @@ trait OpenApiBuilder {
     url: String,
     description: String = null,
     variables: ServerVariables = null,
-    extensions: Map[String, AnyRef] = null
+    extensions: Map[String, Any] = null
   ): Server = {
     val result = new Server()
     result.url(url)
     result.description(description)
     result.variables(variables)
-    result.setExtensions(extensions.asJava)
+    //result.setExtensions(extensions.asJava)
     result
   }
 
   def ServerVariables
   (
     values: Map[String, ServerVariable],
-    extensions: Map[String, AnyRef] = null
+    extensions: Map[String, Any] = null
   ): ServerVariables = {
     val result = new ServerVariables()
     result.putAll(values.asJava)
-    result.setExtensions(extensions.asJava)
+    //result.setExtensions(extensions.asJava)
     result
   }
 
@@ -137,13 +137,13 @@ trait OpenApiBuilder {
     default: String = null,
     description: String = null,
     variables: ServerVariables = null,
-    extensions: Map[String, AnyRef] = null
+    extensions: Map[String, Any] = null
   ): ServerVariable = {
     val result = new ServerVariable()
     result._enum(enum.toList.asJava)
     result._default(default)
     result.description(description)
-    result.setExtensions(extensions.asJava)
+    //result.setExtensions(extensions.asJava)
     result
   }
 
@@ -151,12 +151,12 @@ trait OpenApiBuilder {
   (
     description: String = null,
     url: String = null,
-    extensions: Map[String, AnyRef] = null
+    extensions: Map[String, Any] = null
   ): ExternalDocumentation = {
     val result = new ExternalDocumentation()
     result.description(description)
     result.url(url)
-    result.setExtensions(extensions.asJava)
+    //result.setExtensions(extensions.asJava)
     result
   }
 
@@ -166,13 +166,13 @@ trait OpenApiBuilder {
     description: String = null,
     url: String = null,
     externalDocs: ExternalDocumentation = null,
-    extensions: Map[String, AnyRef] = null
+    extensions: Map[String, Any] = null
   ): Tag = {
     val result = new Tag()
     result.name(name)
     result.description(description)
     result.externalDocs(externalDocs)
-    result.setExtensions(extensions.asJava)
+    //result.setExtensions(extensions.asJava)
     result
   }
 
@@ -199,7 +199,7 @@ trait OpenApiBuilder {
     deprecated: java.lang.Boolean = null,
     security: List[SecurityRequirement] = null,
     servers: List[Server] = null,
-    extensions: Map[String, AnyRef] = null
+    extensions: Map[String, Any] = null
   ): Operation = {
     val result = new Operation()
     result.tags(tags.asJava)
@@ -214,7 +214,7 @@ trait OpenApiBuilder {
     result.deprecated(deprecated)
     result.security(security.asJava)
     result.servers(servers.asJava)
-    result.extensions(extensions.asJava)
+    //result.extensions(extensions.asJava)
     result
   }
 
@@ -236,7 +236,7 @@ trait OpenApiBuilder {
     description: String = null,
     content: Content = null,
     required: java.lang.Boolean = null,
-    extensions: Map[String, AnyRef] = null,
+    extensions: Map[String, Any] = null,
     $ref: String = null
   ): RequestBody = {
     val result = new RequestBody()
@@ -244,7 +244,7 @@ trait OpenApiBuilder {
     result.description(description)
     result.content(content)
     result.required(required)
-    result.extensions(extensions.asJava)
+    //result.extensions(extensions.asJava)
     result.$ref($ref)
 
     result
@@ -256,7 +256,7 @@ trait OpenApiBuilder {
     headers: Map[String, Header] = null,
     content: Content = null,
     links: Map[String, Link] = null,
-    extensions: Map[String, AnyRef] = null,
+    extensions: Map[String, Any] = null,
     $ref: String = null
   ): ApiResponse = {
     val result = new ApiResponse()
@@ -265,7 +265,7 @@ trait OpenApiBuilder {
     result.headers(headers.asJava)
     result.content(content)
     result.setLinks(links.asJava)
-    result.extensions(extensions.asJava)
+    //result.extensions(extensions.asJava)
     result.$ref($ref)
 
     result
@@ -288,7 +288,7 @@ trait OpenApiBuilder {
     examples: Map[String, Example] = null,
     example: Object = null,
     encoding: Map[String, Encoding] = null,
-    extensions: Map[String, Object] = null,
+    extensions: Map[String, Any] = null,
   ): MediaType = {
     val result = new MediaType()
 
@@ -296,7 +296,7 @@ trait OpenApiBuilder {
     result.examples(examples.asJava)
     result.example(example)
     result.encoding(encoding.asJava)
-    result.extensions(extensions.asJava)
+    //result.extensions(extensions.asJava)
 
     result
   }
@@ -308,7 +308,7 @@ trait OpenApiBuilder {
     style: StyleEnum,
     explode: java.lang.Boolean,
     allowReserved: java.lang.Boolean,
-    extensions: Map[String, Object] = null
+    extensions: Map[String, Any] = null
   ): Encoding = {
     val result = new Encoding()
 
@@ -317,7 +317,7 @@ trait OpenApiBuilder {
     result.style(style)
     result.explode(explode)
     result.allowReserved(allowReserved)
-    result.extensions(extensions.asJava)
+    //result.extensions(extensions.asJava)
 
     result
   }
@@ -329,7 +329,7 @@ trait OpenApiBuilder {
     description: String = null,
     externalValue: String = null,
     $ref: String = null,
-    extensions: Map[String, Object] = null
+    extensions: Map[String, Any] = null
   ): Example = {
     val result = new Example()
 
@@ -338,7 +338,7 @@ trait OpenApiBuilder {
     result.value(value)
     result.externalValue(externalValue)
     result.$ref($ref)
-    result.extensions(extensions.asJava)
+    //result.extensions(extensions.asJava)
 
     result
   }
@@ -359,7 +359,7 @@ trait OpenApiBuilder {
     examples: Map[String, Example] = null,
     example: AnyRef = null,
     content: Content = null,
-    extensions: Map[String, AnyRef] = null,
+    extensions: Map[String, Any] = null,
   ): SwaggerParameter = {
     val result = new SwaggerParameter()
 
@@ -377,7 +377,7 @@ trait OpenApiBuilder {
     result.examples(examples.asJava)
     result.example(example)
     result.content(content)
-    result.extensions(extensions.asJava)
+    //result.extensions(extensions.asJava)
 
     result
   }
@@ -392,11 +392,11 @@ trait OpenApiBuilder {
     style: SwaggerParameter.StyleEnum = null,
     explode: java.lang.Boolean = null,
     allowReserved: java.lang.Boolean = null,
-    schema: Schema[_]  = new StringSchema,
+    schema: Schema[_] = new StringSchema,
     examples: Map[String, Example] = null,
     example: AnyRef = null,
     content: Content = null,
-    extensions: Map[String, AnyRef] = null,
+    extensions: Map[String, Any] = null,
   ): SwaggerParameter = Parameter(
     name,
     "path",
@@ -426,11 +426,11 @@ trait OpenApiBuilder {
     style: SwaggerParameter.StyleEnum = null,
     explode: java.lang.Boolean = null,
     allowReserved: java.lang.Boolean = null,
-    schema: Schema[_]  = new StringSchema,
+    schema: Schema[_] = new StringSchema,
     examples: Map[String, Example] = null,
     example: AnyRef = null,
     content: Content = null,
-    extensions: Map[String, AnyRef] = null,
+    extensions: Map[String, Any] = null,
   ): SwaggerParameter = Parameter(
     name,
     "query",
@@ -460,11 +460,11 @@ trait OpenApiBuilder {
     style: SwaggerParameter.StyleEnum = null,
     explode: java.lang.Boolean = null,
     allowReserved: java.lang.Boolean = null,
-    schema: Schema[_]  = new StringSchema,
+    schema: Schema[_] = new StringSchema,
     examples: Map[String, Example] = null,
     example: AnyRef = null,
     content: Content = null,
-    extensions: Map[String, AnyRef] = null,
+    extensions: Map[String, Any] = null,
   ): SwaggerParameter = Parameter(
     name,
     "header",
@@ -494,11 +494,11 @@ trait OpenApiBuilder {
     style: SwaggerParameter.StyleEnum = null,
     explode: java.lang.Boolean = null,
     allowReserved: java.lang.Boolean = null,
-    schema: Schema[_]  = new StringSchema,
+    schema: Schema[_] = new StringSchema,
     examples: Map[String, Example] = null,
     example: AnyRef = null,
     content: Content = null,
-    extensions: Map[String, AnyRef] = null,
+    extensions: Map[String, Any] = null,
   ): SwaggerParameter = Parameter(
     name,
     "cookie",

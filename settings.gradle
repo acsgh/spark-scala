@@ -6,6 +6,6 @@ include ':converter:json:spray'
 include ':converter:template:freemarker'
 include ':converter:template:thymeleaf'
 
-//include ':support:swagger'
+include ':support:swagger'
 
 include ':examples'

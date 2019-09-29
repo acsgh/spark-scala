@@ -79,5 +79,5 @@ abstract class FileFilter extends Directives with LogSupport {
   protected def bytes(input: InputStream): Array[Byte] = Source.fromInputStream(input, "UTF-8").mkString.getBytes("UTF-8")
 
 
-  private def uri(context: RequestContext) = Option(context.request.splat()(0)).map(addTradingSlash).map(removeEndingSlash).getOrElse(URI.create(context.request.uri()).getPath)
+  private def uri(context: RequestContext) = Option(context.request.splat()).filter(_.nonEmpty).map(_(0)).map(addTradingSlash).map(removeEndingSlash).getOrElse(URI.create(context.request.uri()).getPath)
 }

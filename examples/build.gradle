@@ -2,7 +2,7 @@ dependencies {
     compile project(":converter:template:thymeleaf")
     compile project(":converter:json:jackson")
 
-//    compile project(":support:swagger")
+    compile project(":support:swagger")
 
     compile project(":core")
 
