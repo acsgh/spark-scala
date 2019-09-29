@@ -12,7 +12,7 @@ buildscript {
 }
 
 allprojects {
-    group = 'com.github.acsgh.mad.scala'
+    group = 'com.github.acsgh.spark.scala'
 
     apply plugin: 'acsgh-version'
 }
@@ -50,14 +50,14 @@ def customizePom(pom) {
         root.children().last() + {
             resolveStrategy = Closure.DELEGATE_FIRST
 
-            name 'madserver'
+            name 'spark-scala'
             description 'Common utils used in several projects'
-            url 'https://github.com/acsgh/mad-server'
+            url 'https://github.com/acsgh/spark-scala'
 
             licenses {
                 license {
                     name 'Apache License 2.0'
-                    url 'https://github.com/acsgh/madserver/blob/master/LICENSE'
+                    url 'https://github.com/acsgh/spark-scala/blob/master/LICENSE'
                     distribution 'repo'
                 }
             }
@@ -71,9 +71,9 @@ def customizePom(pom) {
             }
 
             scm {
-                connection "scm:git:https://github.com/acsgh/madserver"
-                developerConnection "scm:git:https://github.com/acsgh/madserver"
-                url "https://github.com/acsgh/madserver"
+                connection "scm:git:https://github.com/acsgh/spark-scala"
+                developerConnection "scm:git:https://github.com/acsgh/spark-scala"
+                url "https://github.com/acsgh/spark-scala"
             }
         }
     }
