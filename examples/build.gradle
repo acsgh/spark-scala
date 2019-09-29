@@ -1,0 +1,13 @@
+dependencies {
+    compile project(":converter:template:thymeleaf")
+    compile project(":converter:json:jackson")
+
+//    compile project(":support:swagger")
+
+    compile project(":core")
+
+
+    compile group: 'org.webjars', name: 'bootstrap', version: '3.3.7-1'
+
+    compile group: 'ch.qos.logback', name: 'logback-classic', version: '1.1.7'
+}

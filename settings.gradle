@@ -1,0 +1,11 @@
+rootProject.name = 'spark-scala'
+
+include ':core'
+include ':converter:json:jackson'
+include ':converter:json:spray'
+include ':converter:template:freemarker'
+include ':converter:template:thymeleaf'
+
+//include ':support:swagger'
+
+include ':examples'

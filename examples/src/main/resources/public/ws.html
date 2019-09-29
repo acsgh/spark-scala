@@ -1,0 +1,79 @@
+<html>
+<head>
+    <title>Wave Server: Web Socket Test!!</title>
+    <link rel="stylesheet" href="/webjars/bootstrap/3.3.7-1/css/bootstrap.css">
+</head>
+<body>
+<div class="container">
+    <div class="col-md-12">
+        <h1>Wave Server: Web Socket Test</h1>
+        <script type="text/javascript">
+            var socket;
+
+            function connect() {
+                if (!socket) {
+                    if (!window.WebSocket) {
+                        window.WebSocket = window.MozWebSocket;
+                    }
+                    var url = document.getElementById("url").value;
+                    console.info("url: ", url);
+                    if (window.WebSocket) {
+                        socket = new WebSocket(url);
+                        socket.onmessage = function (event) {
+                            var ta = document.getElementById('responseText');
+                            ta.value = ta.value + '\n' + event.data
+                        };
+                        socket.onopen = function (event) {
+                            var ta = document.getElementById('responseText');
+                            ta.value = "Web Socket opened!";
+                        };
+                        socket.onclose = function (event) {
+                            var ta = document.getElementById('responseText');
+                            ta.value = ta.value + '\n' + "Web Socket closed";
+                        };
+                    } else {
+                        alert("Your browser does not support Web Socket.");
+                    }
+                }
+            }
+
+            function disconnect() {
+                if (socket) {
+                    socket.close();
+                    socket = null;
+                }
+            }
+
+            function send() {
+                var message = document.getElementById("message").value;
+                if (!window.WebSocket || (message == '')) {
+                    return;
+                }
+                if (socket.readyState == WebSocket.OPEN) {
+                    socket.send(message);
+                } else {
+                    alert("The socket is not open.");
+                }
+            }
+        </script>
+        <form onsubmit="return false;">
+            <input id="url" type="url" name="message" value="ws://localhost:7654/echo" style="width: 300px"
+                   autocomplete="off"/>
+
+            <input type="button" value="Connect" onclick="connect()"/>
+            <input type="button" value="Disconnect" onclick="disconnect()"/>
+
+
+            <br/>
+            <br/>
+            <br/>
+            <input id="message" type="text" name="message" value="Hello, World!" autocomplete="off"/>
+            <input type="button" value="Send" onclick="send()"/>
+            <h3>Output</h3>
+            <textarea id="responseText" style="width:500px;height:300px;" autocomplete="off"></textarea>
+        </form>
+    </div>
+</div>
+<script type="javascript" src="/webjars/bootstrap/3.3.7-1/js/bootstrap.min.js"></script>
+</body>
+</html>

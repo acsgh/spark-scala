@@ -1,0 +1,14 @@
+dependencies {
+    compile project(":core")
+
+    compile 'io.swagger.core.v3:swagger-core:2.0.8'
+    compile 'io.swagger.core.v3:swagger-annotations:2.0.8'
+    compile 'io.swagger.core.v3:swagger-integration:2.0.8'
+
+    compile 'com.github.swagger-akka-http:swagger-scala-module_2.12:2.0.4'
+
+    compile 'org.webjars:swagger-ui:3.23.0'
+}
+
+apply plugin: 'acsgh-publish'
+
