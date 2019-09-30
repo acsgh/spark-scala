@@ -12,7 +12,7 @@ case class StaticClasspathFolderFilter(private val baseFolder: String, classLoad
     val file = baseFolder + addTradingSlash(fileName)
     val url = classLoader.getResource(file)
 
-    if ((url != null) && (!file.endsWith("/"))) {
+    if ((url != null) && (!file.endsWith("/")) && fileExists(file)) {
       val contentSupplier = () => loadFileContent(file)
       Some(FileInfo(contentType(fileName), calculateEtag(contentSupplier()), lastModified(url), contentSupplier))
     } else {
@@ -26,8 +26,23 @@ case class StaticClasspathFolderFilter(private val baseFolder: String, classLoad
       bytes(input)
     } catch {
       case e: Exception =>
-        log.info("Unable to read file", e)
+        log.info("Unable to read file: " + file, e)
         new Array[Byte](0)
+    } finally {
+      if (input != null) {
+        input.close()
+      }
+    }
+  }
+
+  private def fileExists(file: String) = {
+    val input = classLoader.getResourceAsStream(file)
+    try {
+      input != null
+    } catch {
+      case e: Exception =>
+        log.debug("Unable to found file: " + file, e)
+        false
     } finally {
       if (input != null) {
         input.close()

@@ -1,6 +1,6 @@
 package acsgh.spark.scala.files
 
-import java.io.InputStream
+import java.io.{ByteArrayOutputStream, InputStream}
 import java.math.BigInteger
 import java.net.{URI, URLConnection}
 import java.security.MessageDigest
@@ -11,8 +11,6 @@ import acsgh.spark.scala.ResponseStatus._
 import acsgh.spark.scala.directives.Directives
 import com.acsgh.common.scala.log.LogSupport
 import spark.Response
-
-import scala.io.Source
 
 
 object FileFilter {
@@ -76,8 +74,22 @@ abstract class FileFilter extends Directives with LogSupport {
     result
   }
 
-  protected def bytes(input: InputStream): Array[Byte] = Source.fromInputStream(input, "UTF-8").mkString.getBytes("UTF-8")
+  protected def bytes(input: InputStream): Array[Byte] = {
+    val output = new ByteArrayOutputStream()
+
+    try {
+      val buffer = new Array[Byte](1024)
+
+      Stream.continually(input.read(buffer))
+        .takeWhile(_ != -1)
+        .foreach(output.write(buffer, 0, _))
+
+      output.toByteArray
+    } finally {
+      output.close()
+    }
+  }
 
 
-  private def uri(context: RequestContext) = Option(context.request.splat()).filter(_.nonEmpty).map(_(0)).map(addTradingSlash).map(removeEndingSlash).getOrElse(URI.create(context.request.uri()).getPath)
+  private def uri(context: RequestContext) = Option(context.request.splat()).filter(_.nonEmpty).map(_ (0)).map(addTradingSlash).map(removeEndingSlash).getOrElse(URI.create(context.request.uri()).getPath)
 }

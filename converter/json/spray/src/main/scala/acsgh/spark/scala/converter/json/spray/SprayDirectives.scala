@@ -1,15 +1,16 @@
 package acsgh.spark.scala.converter.json.spray
 
-import acsgh.spark.scala.ProductionInfo
 import acsgh.spark.scala.RequestContext
 import acsgh.spark.scala.convertions.{BodyReader, BodyWriter}
 import acsgh.spark.scala.directives.Directives
 import acsgh.spark.scala.exception.BadRequestException
-import acsgh.spark.scala.model.Response
+import spark.Response
 import spray.json._
 
-trait SprayDirectives extends ProductionInfo {
+trait SprayDirectives {
   directives: Directives =>
+
+  val productionMode: Boolean
 
   protected def reader[T](clazz: Class[T])(implicit jsonReader: JsonReader[T]): BodyReader[T] = new BodyReader[T] {
     override val contentTypes: Set[String] = Set("application/json")
