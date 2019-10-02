@@ -88,7 +88,7 @@ object Boot extends SparkApp with ThymeleafSparkApp with JacksonSparkApp with Sw
       }
     }
 
-    put("/persons/{id}", Operation(
+    put("/persons/:id/cosa/:cosaId", Operation(
       operationId = "editPerson",
       summary = "Edit person",
       parameters = List(
@@ -119,7 +119,7 @@ object Boot extends SparkApp with ThymeleafSparkApp with JacksonSparkApp with Sw
       }
     }
 
-    get("/persons/{id}", Operation(
+    get("/persons/:id", Operation(
       operationId = "getPerson",
       summary = "Get person",
       parameters = List(
@@ -138,7 +138,7 @@ object Boot extends SparkApp with ThymeleafSparkApp with JacksonSparkApp with Sw
       }
     }
 
-    delete("/persons/{id}", Operation(
+    delete("/persons/:id", Operation(
       operationId = "deletePerson",
       summary = "Delete person",
       parameters = List(

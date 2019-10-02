@@ -70,9 +70,11 @@ trait SwaggerRoutes extends Spark with OpenApiBuilder {
       openAPi.setPaths(new Paths)
     }
 
-    openAPi.getPaths.putIfAbsent(uri, new PathItem())
+    val finalUri = swaggeryfyURI(uri)
 
-    val item = openAPi.getPaths.get(uri)
+    openAPi.getPaths.putIfAbsent(finalUri, new PathItem())
+
+    val item = openAPi.getPaths.get(finalUri)
 
     method match {
       case "OPTIONS" =>
@@ -93,4 +95,6 @@ trait SwaggerRoutes extends Spark with OpenApiBuilder {
         item.trace(operation)
     }
   }
+
+  def swaggeryfyURI(uri: String): String = uri.replaceAll(":(\\w+)", "{$1}")
 }

@@ -51,7 +51,7 @@ trait OpenApiBuilder {
     result.tags(tags.asJava)
     result.paths(paths)
     result.components(components)
-    //result.extensions(extensions.asJava)
+    result.extensions(asJava(extensions))
     result
   }
 
@@ -72,7 +72,7 @@ trait OpenApiBuilder {
     result.contact(contact)
     result.license(license)
     result.version(version)
-    ////result.setExtensions(extensions.asJava)
+    result.setExtensions(asJava(extensions))
     result
   }
 
@@ -87,7 +87,7 @@ trait OpenApiBuilder {
     result.name(name)
     result.url(url)
     result.email(email)
-    //result.setExtensions(extensions.asJava)
+    result.setExtensions(asJava(extensions))
     result
   }
 
@@ -214,7 +214,7 @@ trait OpenApiBuilder {
     result.deprecated(deprecated)
     result.security(security.asJava)
     result.servers(servers.asJava)
-    //result.extensions(extensions.asJava)
+    result.extensions(asJava(extensions))
     result
   }
 
@@ -244,7 +244,7 @@ trait OpenApiBuilder {
     result.description(description)
     result.content(content)
     result.required(required)
-    //result.extensions(extensions.asJava)
+    result.extensions(asJava(extensions))
     result.$ref($ref)
 
     result
@@ -265,7 +265,7 @@ trait OpenApiBuilder {
     result.headers(headers.asJava)
     result.content(content)
     result.setLinks(links.asJava)
-    //result.extensions(extensions.asJava)
+    result.extensions(asJava(extensions))
     result.$ref($ref)
 
     result
@@ -296,7 +296,7 @@ trait OpenApiBuilder {
     result.examples(examples.asJava)
     result.example(example)
     result.encoding(encoding.asJava)
-    //result.extensions(extensions.asJava)
+    result.extensions(asJava(extensions))
 
     result
   }
@@ -317,7 +317,7 @@ trait OpenApiBuilder {
     result.style(style)
     result.explode(explode)
     result.allowReserved(allowReserved)
-    //result.extensions(extensions.asJava)
+    result.extensions(asJava(extensions))
 
     result
   }
@@ -338,7 +338,7 @@ trait OpenApiBuilder {
     result.value(value)
     result.externalValue(externalValue)
     result.$ref($ref)
-    //result.extensions(extensions.asJava)
+    result.extensions(asJava(extensions))
 
     result
   }
@@ -377,7 +377,7 @@ trait OpenApiBuilder {
     result.examples(examples.asJava)
     result.example(example)
     result.content(content)
-    //result.extensions(extensions.asJava)
+    result.extensions(asJava(extensions))
 
     result
   }
@@ -584,5 +584,16 @@ trait OpenApiBuilder {
     }
 
     schemas.foreach(e => openApi.getComponents.addSchemas(e._1, e._2))
+  }
+
+
+  private def asJava(input: Map[String, Any]): java.util.Map[String, Object] = {
+    if (input != null) {
+      val result = new java.util.HashMap[String, Object]()
+      input.foreach(e => result.put(e._1, e._2.asInstanceOf[Object]))
+      result
+    } else {
+      null
+    }
   }
 }
