@@ -51,7 +51,7 @@ def customizePom(pom) {
             resolveStrategy = Closure.DELEGATE_FIRST
 
             name 'spark-scala'
-            description 'Common utils used in several projects'
+            description 'Scala DSL for spark-java'
             url 'https://github.com/acsgh/spark-scala'
 
             licenses {
