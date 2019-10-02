@@ -88,7 +88,7 @@ object Boot extends SparkApp with ThymeleafSparkApp with JacksonSparkApp with Sw
       }
     }
 
-    put("/persons/:id/cosa/:cosaId", Operation(
+    put("/persons/:id", Operation(
       operationId = "editPerson",
       summary = "Edit person",
       parameters = List(
