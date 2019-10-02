@@ -1,10 +1,12 @@
 package acsgh.spark.scala.directives
 
-import acsgh.spark.scala.{RequestContext, ResponseStatus}
 import acsgh.spark.scala.convertions.{BodyWriter, DefaultFormats, DefaultParamHandling, ParamWriter}
-import spark.Response
+import acsgh.spark.scala.{RequestContext, ResponseStatus}
+import spark.{Response, Service}
 
 trait ResponseDirectives extends DefaultParamHandling with DefaultFormats {
+
+  protected val service: Service
 
   def responseHeader[T](name: String, value: T)(action: => Response)(implicit context: RequestContext, converter: ParamWriter[T]): Response = {
     context.response.header(name, converter.write(value))
@@ -14,6 +16,16 @@ trait ResponseDirectives extends DefaultParamHandling with DefaultFormats {
   def responseStatus(input: ResponseStatus)(action: => Response)(implicit context: RequestContext): Response = {
     context.response.status(input.code)
     action
+  }
+
+  def halt(input: ResponseStatus)(implicit context: RequestContext): Response = {
+    service.halt(input.code)
+    context.response
+  }
+
+  def halt(input: ResponseStatus, message: String)(implicit context: RequestContext): Response = {
+    service.halt(input.code, message)
+    context.response
   }
 
   def responseBody(input: Array[Byte])(implicit context: RequestContext): Response = {

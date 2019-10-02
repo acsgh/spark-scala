@@ -4,13 +4,14 @@ import java.io.File
 
 import acsgh.spark.scala.directives.Directives
 import acsgh.spark.scala.files.{StaticClasspathFolderFilter, StaticFilesystemFolderFilter}
-import spark.{Filter, Request, Response, Service}
+import acsgh.spark.scala.handler.{DefaultExceptionHandler, ErrorCodeHandler, ExceptionHandler}
+import spark._
 
 object Spark {
   private[scala] val service: Service = Service.ignite()
 }
 
-trait Spark extends Directives{
+trait Spark extends Directives {
   protected implicit val service: Service = Spark.service
 
   def get(url: String)(action: RequestContext => Response): Unit = {
@@ -100,16 +101,44 @@ trait Spark extends Directives{
     })
   }
 
-  def resourceFolder(uri: String, resourceFolderPath: String): Unit = before(uri)(StaticClasspathFolderFilter(resourceFolderPath).handle)
+  def resourceFolder(uri: String, resourceFolderPath: String): Unit = before(uri)(StaticClasspathFolderFilter(resourceFolderPath, productionMode).handle)
 
-  def filesystemFolder(uri: String, resourceFolderPath: String): Unit = before(uri)(StaticFilesystemFolderFilter(new File(resourceFolderPath)).handle)
+  def filesystemFolder(uri: String, resourceFolderPath: String): Unit = before(uri)(StaticFilesystemFolderFilter(new File(resourceFolderPath), productionMode).handle)
 
   def webjars(): Unit = resourceFolder("/webjars/*", "META-INF/resources/webjars")
 
+  def exceptionHandler(handler: ExceptionHandler): Unit = {
+    service.exception(classOf[java.lang.Exception], (exception: Exception, request: Request, response: Response) => {
+      val url: String = request.attribute("x-url")
+      implicit val context: RequestContext = toContext(url, request, response)
+      handler.handle(exception)
+    })
+  }
 
-  protected def toContext(url: String, request: spark.Request, response: spark.Response): RequestContext = RequestContext(
-    url,
-    request,
-    response
-  )
+  def defaultExceptionHandler(): Unit = exceptionHandler(new DefaultExceptionHandler(service, productionMode))
+
+  def errorPageHandler(responseStatus: ResponseStatus, handler: ErrorCodeHandler): Unit = {
+    val method = classOf[CustomErrorPages].getDeclaredMethod("add", Integer.TYPE, classOf[Route])
+    method.setAccessible(true)
+
+    val code:java.lang.Integer = responseStatus.code
+
+    val route: Route = (request: Request, response: Response) => {
+      val url: String = request.attribute("x-url")
+      implicit val context: RequestContext = toContext(url, request, response)
+      handler.handle(responseStatus)
+      ""
+    }
+    method.invoke(null, code, route)
+  }
+
+
+  private def toContext(url: String, request: spark.Request, response: spark.Response): RequestContext = {
+    request.attribute("x-url", url)
+    RequestContext(
+      url,
+      request,
+      response
+    )
+  }
 }

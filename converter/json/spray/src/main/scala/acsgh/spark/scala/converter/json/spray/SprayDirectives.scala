@@ -10,8 +10,6 @@ import spray.json._
 trait SprayDirectives {
   directives: Directives =>
 
-  val productionMode: Boolean
-
   protected def reader[T](clazz: Class[T])(implicit jsonReader: JsonReader[T]): BodyReader[T] = new BodyReader[T] {
     override val contentTypes: Set[String] = Set("application/json")
 
