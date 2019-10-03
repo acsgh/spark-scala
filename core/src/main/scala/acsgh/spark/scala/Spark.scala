@@ -14,6 +14,18 @@ object Spark {
 trait Spark extends Directives {
   protected implicit val service: Service = Spark.service
 
+  def activeThreadCount(): Int = service.activeThreadCount()
+
+  def threadPool(maxThreads: Int, minThreads: Int, idleTimeoutMillis: Int): Service = service.threadPool(maxThreads, minThreads, idleTimeoutMillis)
+
+  def threadPool(maxThreads: Int): Service = service.threadPool(maxThreads)
+
+  def port(): Int = service.port()
+
+  def port(port: Int): Service = service.port(port)
+
+  def ipAddress(ipAddress: String): Service = service.ipAddress(ipAddress)
+
   def get(url: String)(action: RequestContext => Response): Unit = {
     service.get(url, (request, response) => {
       action(toContext(url, request, response))
