@@ -1,6 +1,7 @@
 package acsgh.spark.scala
 
 import java.io.File
+import java.net.URI
 
 import acsgh.spark.scala.directives.Directives
 import acsgh.spark.scala.files.{StaticClasspathFolderFilter, StaticFilesystemFolderFilter}
@@ -9,6 +10,8 @@ import spark._
 
 object Spark {
   private[scala] val service: Service = Service.ignite()
+
+  private[scala] var productionEnvironment: Boolean = false
 }
 
 trait Spark extends Directives {
@@ -89,6 +92,30 @@ trait Spark extends Directives {
     })
   }
 
+  def before(action: RequestContext => Response): Unit = {
+    service.before(new Filter {
+      override def handle(request: Request, response: Response): Unit = {
+        action(toContext(request, response))
+      }
+    })
+  }
+
+  def after(action: RequestContext => Response): Unit = {
+    service.after(new Filter {
+      override def handle(request: Request, response: Response): Unit = {
+        action(toContext(request, response))
+      }
+    })
+  }
+
+  def afterAfter(action: RequestContext => Response): Unit = {
+    service.afterAfter(new Filter {
+      override def handle(request: Request, response: Response): Unit = {
+        action(toContext(request, response))
+      }
+    })
+  }
+
   def before(url: String)(action: RequestContext => Response): Unit = {
     service.before(url, new Filter {
       override def handle(request: Request, response: Response): Unit = {
@@ -113,21 +140,20 @@ trait Spark extends Directives {
     })
   }
 
-  def resourceFolder(uri: String, resourceFolderPath: String): Unit = before(uri)(StaticClasspathFolderFilter(resourceFolderPath, productionMode).handle)
+  def resourceFolder(uri: String, resourceFolderPath: String): Unit = before(uri)(StaticClasspathFolderFilter(resourceFolderPath).handle)
 
-  def filesystemFolder(uri: String, resourceFolderPath: String): Unit = before(uri)(StaticFilesystemFolderFilter(new File(resourceFolderPath), productionMode).handle)
+  def filesystemFolder(uri: String, resourceFolderPath: String): Unit = before(uri)(StaticFilesystemFolderFilter(new File(resourceFolderPath)).handle)
 
   def webjars(): Unit = resourceFolder("/webjars/*", "META-INF/resources/webjars")
 
   def exceptionHandler(handler: ExceptionHandler): Unit = {
     service.exception(classOf[java.lang.Exception], (exception: Exception, request: Request, response: Response) => {
-      val url: String = request.attribute("x-url")
-      implicit val context: RequestContext = toContext(url, request, response)
+      implicit val context: RequestContext = toContext(request, response)
       handler.handle(exception)
     })
   }
 
-  def defaultExceptionHandler(): Unit = exceptionHandler(new DefaultExceptionHandler(service, productionMode))
+  def defaultExceptionHandler(): Unit = exceptionHandler(new DefaultExceptionHandler())
 
   def errorPageHandler(responseStatus: ResponseStatus, handler: ErrorCodeHandler): Unit = {
     val method = classOf[CustomErrorPages].getDeclaredMethod("add", Integer.TYPE, classOf[Route])
@@ -136,8 +162,7 @@ trait Spark extends Directives {
     val code:java.lang.Integer = responseStatus.code
 
     val route: Route = (request: Request, response: Response) => {
-      val url: String = request.attribute("x-url")
-      implicit val context: RequestContext = toContext(url, request, response)
+      implicit val context: RequestContext = toContext(request, response)
       handler.handle(responseStatus)
       ""
     }
@@ -152,5 +177,10 @@ trait Spark extends Directives {
       request,
       response
     )
+  }
+
+  private def toContext(request: spark.Request, response: spark.Response): RequestContext = {
+    val url: String = Option(request.attribute("x-url")).getOrElse(URI.create(request.uri()).getPath)
+    toContext(url, request, response)
   }
 }

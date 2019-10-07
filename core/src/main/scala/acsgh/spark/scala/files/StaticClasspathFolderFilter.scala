@@ -6,7 +6,7 @@ import java.util.Date
 
 import spark.Service
 
-case class StaticClasspathFolderFilter(private val baseFolder: String, protected val productionMode:Boolean, classLoader: ClassLoader = Thread.currentThread().getContextClassLoader)(implicit protected val service:Service) extends FileFilter {
+case class StaticClasspathFolderFilter(private val baseFolder: String, classLoader: ClassLoader = Thread.currentThread().getContextClassLoader)(implicit protected val service:Service) extends FileFilter {
 
   override def getFileInfo(fileName: String): Option[FileInfo] = {
     val file = baseFolder + addTradingSlash(fileName)

@@ -6,7 +6,7 @@ import java.util.Date
 
 import spark.Service
 
-case class StaticFilesystemFolderFilter(private val baseFolder: File, protected val productionMode: Boolean)(implicit protected val service: Service) extends FileFilter {
+case class StaticFilesystemFolderFilter(private val baseFolder: File)(implicit protected val service: Service) extends FileFilter {
 
   if (!baseFolder.exists || !baseFolder.isDirectory) throw new FileNotFoundException("Folder " + baseFolder.getAbsolutePath + " does not exist or is not a folder")
 

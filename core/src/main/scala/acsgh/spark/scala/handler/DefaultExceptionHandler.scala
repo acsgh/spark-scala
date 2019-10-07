@@ -1,7 +1,7 @@
 package acsgh.spark.scala.handler
 
 import acsgh.spark.scala.exception.BadRequestException
-import acsgh.spark.scala.{RequestContext, ResponseStatus}
+import acsgh.spark.scala.{RequestContext, ResponseStatus, Spark}
 import spark.{Response, Service}
 
 object DefaultExceptionHandler {
@@ -34,7 +34,7 @@ object DefaultExceptionHandler {
   }
 }
 
-class DefaultExceptionHandler(protected val service: Service, protected val productionMode: Boolean) extends ExceptionHandler {
+class DefaultExceptionHandler(protected val service: Service = Spark.service) extends ExceptionHandler {
   override def handle(exception: Exception)(implicit requestContext: RequestContext): Response = {
     val status = if (exception.isInstanceOf[BadRequestException]) ResponseStatus.BAD_REQUEST else ResponseStatus.INTERNAL_SERVER_ERROR
     responseStatus(status) {
