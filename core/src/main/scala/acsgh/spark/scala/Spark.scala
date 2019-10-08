@@ -17,6 +17,10 @@ object Spark {
 trait Spark extends Directives {
   protected implicit val service: Service = Spark.service
 
+  def production(value:Boolean) : Unit = {
+    Spark.productionEnvironment = value
+  }
+
   def activeThreadCount(): Int = service.activeThreadCount()
 
   def threadPool(maxThreads: Int, minThreads: Int, idleTimeoutMillis: Int): Service = service.threadPool(maxThreads, minThreads, idleTimeoutMillis)

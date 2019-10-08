@@ -43,17 +43,17 @@ trait DefaultParamHandling {
 
   implicit class ParamsEnhanced[P, R](param: Param[P, R]) {
     def queryValue(implicit context: RequestContext): R = {
-      val value = context.queryParams.getOrElse(param.name, List())
+      val value = context.queryParams.find(_._1.equalsIgnoreCase(param.name)).map(_._2).getOrElse(List())
       param("Query", value)
     }
 
     def pathValue(implicit context: RequestContext): R = {
-      val value = context.pathParams.get(param.name).toList
+      val value = context.pathParams.find(_._1.equalsIgnoreCase(param.name)).map(_._2).toList
       param("Path", value)
     }
 
     def headerValue(implicit context: RequestContext): R = {
-      val value = context.requestHeaders.getOrElse(param.name, List())
+      val value = context.requestHeaders.find(_._1.equalsIgnoreCase(param.name)).map(_._2).getOrElse(List())
       param("Header", value)
     }
   }
