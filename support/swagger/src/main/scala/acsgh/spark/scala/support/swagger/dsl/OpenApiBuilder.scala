@@ -123,12 +123,10 @@ trait OpenApiBuilder {
 
   def ServerVariables
   (
-    values: Map[String, ServerVariable],
-    extensions: Map[String, Any] = null
+    values: Map[String, ServerVariable]
   ): ServerVariables = {
     val result = new ServerVariables()
     result.putAll(values.asJava)
-    result.setExtensions(asJava(extensions))
     result
   }
 

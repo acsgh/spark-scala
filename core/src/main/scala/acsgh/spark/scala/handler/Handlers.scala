@@ -11,3 +11,8 @@ trait ErrorCodeHandler extends Directives {
 trait ExceptionHandler extends Directives {
   def handle(exception: Exception)(implicit requestContext: RequestContext): Response
 }
+
+trait LoggingHandler extends ExceptionHandler {
+  def onStart()(implicit requestContext: RequestContext): Response
+  def onStop()(implicit requestContext: RequestContext): Response
+}

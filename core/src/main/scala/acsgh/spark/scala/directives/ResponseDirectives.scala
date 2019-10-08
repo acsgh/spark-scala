@@ -29,6 +29,7 @@ trait ResponseDirectives extends DefaultParamHandling with DefaultFormats {
   }
 
   def responseBody(input: Array[Byte])(implicit context: RequestContext): Response = {
+    context.response.body("")
     context.response.raw().getOutputStream.write(input)
     context.response
   }

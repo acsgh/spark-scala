@@ -34,10 +34,11 @@ object DefaultExceptionHandler {
   }
 }
 
-class DefaultExceptionHandler(protected val service: Service = Spark.service) extends ExceptionHandler {
-  override def handle(exception: Exception)(implicit ctx: RequestContext): Response = {
-    log.error(s"Error during request: ${ctx.request.requestMethod}: ${ctx.request.uri} - Request: ${ctx.request.body}", exception)
+class DefaultExceptionHandler extends ExceptionHandler {
 
+  protected val service: Service = Spark.service
+
+  override def handle(exception: Exception)(implicit ctx: RequestContext): Response = {
     val status = if (exception.isInstanceOf[BadRequestException]) ResponseStatus.BAD_REQUEST else ResponseStatus.INTERNAL_SERVER_ERROR
     responseStatus(status) {
       responseBody(getStatusBody(status, exception))

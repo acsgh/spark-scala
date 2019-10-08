@@ -4,8 +4,8 @@ import java.io.File
 
 import acsgh.spark.scala.directives.Directives
 import acsgh.spark.scala.files.{StaticClasspathFolderFilter, StaticFilesystemFolderFilter}
-import acsgh.spark.scala.handler.{DefaultExceptionHandler, ErrorCodeHandler, ExceptionHandler}
-import spark._
+import acsgh.spark.scala.handler.{DefaultExceptionHandler, DefaultLoggingHandler, ErrorCodeHandler, ExceptionHandler, LoggingHandler}
+import spark.{CustomErrorPages, Filter, Request, Response, Route, Service}
 import spark.route.{HttpMethod, Routes}
 
 object Spark {
@@ -161,9 +161,16 @@ trait Spark extends Directives {
 
   def exceptionHandler(handler: ExceptionHandler): Unit = {
     service.exception(classOf[java.lang.Exception], (exception: Exception, request: Request, response: Response) => {
-      implicit val context: RequestContext = toContext(request, response)
-      handler.handle(exception)
+      handler.handle(exception)(toContext(request, response))
     })
+  }
+
+  def defaultLoggingHandler(delegate: handler.ExceptionHandler = new DefaultExceptionHandler()): Unit = loggingHandler(new DefaultLoggingHandler(delegate = delegate))
+
+  def loggingHandler(handler: LoggingHandler): Unit = {
+    before(implicit ctx => handler.onStart)
+    afterAfter(implicit ctx => handler.onStop)
+    exceptionHandler(handler)
   }
 
   def defaultExceptionHandler(): Unit = exceptionHandler(new DefaultExceptionHandler())
@@ -189,7 +196,7 @@ trait Spark extends Directives {
     response
   )
 
-  private def toContext(url:String, request: spark.Request, response: spark.Response): RequestContext = RequestContext(
+  private def toContext(url: String, request: spark.Request, response: spark.Response): RequestContext = RequestContext(
     route(request).orElse(Some(url)),
     request,
     response

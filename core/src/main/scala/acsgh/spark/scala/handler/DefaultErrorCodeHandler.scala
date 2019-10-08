@@ -1,9 +1,12 @@
 package acsgh.spark.scala.handler
 
-import acsgh.spark.scala.{RequestContext, ResponseStatus}
+import acsgh.spark.scala.{RequestContext, ResponseStatus, Spark}
 import spark.{Response, Service}
 
-class DefaultErrorCodeHandler(protected val service: Service) extends ErrorCodeHandler {
+class DefaultErrorCodeHandler() extends ErrorCodeHandler {
+
+  protected val service: Service = Spark.service
+
   override def handle(status: ResponseStatus)(implicit requestContext: RequestContext): Response = {
     responseStatus(status) {
       responseBody(getStatusBody(status))
