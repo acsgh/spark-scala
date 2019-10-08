@@ -7,7 +7,7 @@ import scala.collection.JavaConverters._
 
 case class RequestContext
 (
-  route: String,
+  route: Option[String],
   request: Request,
   response: Response
 ) {

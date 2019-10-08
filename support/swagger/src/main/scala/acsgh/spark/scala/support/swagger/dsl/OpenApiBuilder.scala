@@ -1,5 +1,6 @@
 package acsgh.spark.scala.support.swagger.dsl
 
+import acsgh.spark.scala.ResponseStatus
 import io.swagger.v3.core.converter.ModelConverters
 import io.swagger.v3.core.util.Json
 import io.swagger.v3.oas.models._
@@ -101,7 +102,7 @@ trait OpenApiBuilder {
     val result = new License()
     result.name(name)
     result.url(url)
-    //result.setExtensions(extensions.asJava)
+    result.setExtensions(asJava(extensions))
     result
   }
 
@@ -116,7 +117,7 @@ trait OpenApiBuilder {
     result.url(url)
     result.description(description)
     result.variables(variables)
-    //result.setExtensions(extensions.asJava)
+    result.setExtensions(asJava(extensions))
     result
   }
 
@@ -127,7 +128,7 @@ trait OpenApiBuilder {
   ): ServerVariables = {
     val result = new ServerVariables()
     result.putAll(values.asJava)
-    //result.setExtensions(extensions.asJava)
+    result.setExtensions(asJava(extensions))
     result
   }
 
@@ -143,7 +144,7 @@ trait OpenApiBuilder {
     result._enum(enum.toList.asJava)
     result._default(default)
     result.description(description)
-    //result.setExtensions(extensions.asJava)
+    result.setExtensions(asJava(extensions))
     result
   }
 
@@ -156,7 +157,7 @@ trait OpenApiBuilder {
     val result = new ExternalDocumentation()
     result.description(description)
     result.url(url)
-    //result.setExtensions(extensions.asJava)
+    result.setExtensions(asJava(extensions))
     result
   }
 
@@ -172,7 +173,7 @@ trait OpenApiBuilder {
     result.name(name)
     result.description(description)
     result.externalDocs(externalDocs)
-    //result.setExtensions(extensions.asJava)
+    result.setExtensions(asJava(extensions))
     result
   }
 
@@ -220,12 +221,12 @@ trait OpenApiBuilder {
 
   def ApiResponses
   (
-    responses: (Int, ApiResponse)*
+    responses: (ResponseStatus, ApiResponse)*
   ): ApiResponses = {
     val result = new ApiResponses()
 
     if (responses != null) {
-      responses.foreach(e => result.put(e._1.toString, e._2))
+      responses.foreach(e => result.put(e._1.code.toString, e._2))
     }
 
     result

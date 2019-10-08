@@ -15,7 +15,7 @@ trait SprayDirectives {
 
     override def read(body: Array[Byte]): T = {
       try {
-        new String(body, "UTF_8").parseJson.convertTo[T]
+        new String(body, "UTF-8").parseJson.convertTo[T]
       } catch {
         case e: Exception => throw new BadRequestException(e)
       }

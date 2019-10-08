@@ -1,23 +1,32 @@
 package acsgh.spark.scala
 
 import java.io.File
-import java.net.URI
 
 import acsgh.spark.scala.directives.Directives
 import acsgh.spark.scala.files.{StaticClasspathFolderFilter, StaticFilesystemFolderFilter}
 import acsgh.spark.scala.handler.{DefaultExceptionHandler, ErrorCodeHandler, ExceptionHandler}
 import spark._
+import spark.route.{HttpMethod, Routes}
 
 object Spark {
+
+  private val ROUTES = "routes"
+
   private[scala] val service: Service = Service.ignite()
 
   private[scala] var productionEnvironment: Boolean = false
+
+  private[scala] lazy val sparkRoutes: Routes = {
+    val sparkRoutesField = classOf[Service].getDeclaredField(ROUTES)
+    sparkRoutesField.setAccessible(true)
+    sparkRoutesField.get(service).asInstanceOf[Routes]
+  }
 }
 
 trait Spark extends Directives {
   protected implicit val service: Service = Spark.service
 
-  def production(value:Boolean) : Unit = {
+  def production(value: Boolean): Unit = {
     Spark.productionEnvironment = value
   }
 
@@ -35,63 +44,63 @@ trait Spark extends Directives {
 
   def get(url: String)(action: RequestContext => Response): Unit = {
     service.get(url, (request, response) => {
-      action(toContext(url, request, response))
+      action(toContext(request, response))
       ""
     })
   }
 
   def post(url: String)(action: RequestContext => Response): Unit = {
     service.post(url, (request, response) => {
-      action(toContext(url, request, response))
+      action(toContext(request, response))
       ""
     })
   }
 
   def put(url: String)(action: RequestContext => Response): Unit = {
     service.put(url, (request, response) => {
-      action(toContext(url, request, response))
+      action(toContext(request, response))
       ""
     })
   }
 
   def patch(url: String)(action: RequestContext => Response): Unit = {
     service.patch(url, (request, response) => {
-      action(toContext(url, request, response))
+      action(toContext(request, response))
       ""
     })
   }
 
   def delete(url: String)(action: RequestContext => Response): Unit = {
     service.delete(url, (request, response) => {
-      action(toContext(url, request, response))
+      action(toContext(request, response))
       ""
     })
   }
 
   def head(url: String)(action: RequestContext => Response): Unit = {
     service.head(url, (request, response) => {
-      action(toContext(url, request, response))
+      action(toContext(request, response))
       ""
     })
   }
 
   def trace(url: String)(action: RequestContext => Response): Unit = {
     service.trace(url, (request, response) => {
-      action(toContext(url, request, response))
+      action(toContext(request, response))
       ""
     })
   }
 
   def connect(url: String)(action: RequestContext => Response): Unit = {
     service.connect(url, (request, response) => {
-      action(toContext(url, request, response))
+      action(toContext(request, response))
       ""
     })
   }
 
   def options(url: String)(action: RequestContext => Response): Unit = {
     service.options(url, (request, response) => {
-      action(toContext(url, request, response))
+      action(toContext(request, response))
       ""
     })
   }
@@ -163,7 +172,7 @@ trait Spark extends Directives {
     val method = classOf[CustomErrorPages].getDeclaredMethod("add", Integer.TYPE, classOf[Route])
     method.setAccessible(true)
 
-    val code:java.lang.Integer = responseStatus.code
+    val code: java.lang.Integer = responseStatus.code
 
     val route: Route = (request: Request, response: Response) => {
       implicit val context: RequestContext = toContext(request, response)
@@ -174,17 +183,27 @@ trait Spark extends Directives {
   }
 
 
-  private def toContext(url: String, request: spark.Request, response: spark.Response): RequestContext = {
-    request.attribute("x-url", url)
-    RequestContext(
-      url,
-      request,
-      response
-    )
-  }
+  private def toContext(request: spark.Request, response: spark.Response): RequestContext = RequestContext(
+    route(request),
+    request,
+    response
+  )
 
-  private def toContext(request: spark.Request, response: spark.Response): RequestContext = {
-    val url: String = Option(request.attribute("x-url")).getOrElse(URI.create(request.uri()).getPath)
-    toContext(url, request, response)
-  }
+  private def toContext(url:String, request: spark.Request, response: spark.Response): RequestContext = RequestContext(
+    route(request).orElse(Some(url)),
+    request,
+    response
+  )
+
+  private def route(request: Request): Option[String] =
+    Option(
+      Spark.sparkRoutes.find(
+        HttpMethod.get(
+          request.requestMethod.toLowerCase),
+        request.uri,
+        null
+      )
+    )
+      .map(_.getMatchUri)
+      .map(s => if (s.startsWith("/")) s else s"/$s")
 }

@@ -2,11 +2,13 @@ package acsgh.spark.scala.examples.jetty
 
 import java.util.concurrent.atomic.AtomicLong
 
+import acsgh.spark.scala.ResponseStatus._
 import acsgh.spark.scala.{ResponseStatus, SparkApp}
 import acsgh.spark.scala.converter.json.jackson.JacksonSparkApp
 import acsgh.spark.scala.converter.template.thymeleaf.ThymeleafSparkApp
 import acsgh.spark.scala.support.swagger.SwaggerRoutes
 import io.swagger.v3.oas.models.OpenAPI
+
 
 object Boot extends SparkApp with ThymeleafSparkApp with JacksonSparkApp with SwaggerRoutes {
   override val name: String = "Jetty Boot Example"
@@ -55,7 +57,7 @@ object Boot extends SparkApp with ThymeleafSparkApp with JacksonSparkApp with Sw
     summary = "Get All",
     description = "Get all persons of the service",
     responses = ApiResponses(
-      200 -> ApiResponseJson(classOf[List[Person]], "All persons"),
+      OK -> ApiResponseJson(classOf[List[Person]], "All persons"),
     )
   )) { implicit context =>
     responseJson(persons.values.toList.sortBy(_.id))
@@ -74,8 +76,8 @@ object Boot extends SparkApp with ThymeleafSparkApp with JacksonSparkApp with Sw
         )
       ),
       responses = ApiResponses(
-        201 -> ApiResponseJson(classOf[Person], "The person created"),
-        400 -> ApiResponse("Invalid request")
+        CREATED -> ApiResponseJson(classOf[Person], "The person created"),
+        BAD_REQUEST -> ApiResponse("Invalid request")
       )
     )) { implicit context =>
       requestJson(classOf[Person]) { person =>
@@ -103,9 +105,9 @@ object Boot extends SparkApp with ThymeleafSparkApp with JacksonSparkApp with Sw
         )
       ),
       responses = ApiResponses(
-        201 -> ApiResponseJson(classOf[Person], "The person modified"),
-        204 -> ApiResponse("Person not found"),
-        400 -> ApiResponse("Invalid request")
+        CREATED -> ApiResponseJson(classOf[Person], "The person modified"),
+        NO_CONTENT -> ApiResponse("Person not found"),
+        BAD_REQUEST -> ApiResponse("Invalid request")
       )
     )) { implicit context =>
       requestParam("id".as[Long]) { id =>
@@ -126,9 +128,9 @@ object Boot extends SparkApp with ThymeleafSparkApp with JacksonSparkApp with Sw
         PathParameter("id", "The person id")
       ),
       responses = ApiResponses(
-        200 -> ApiResponseJson(classOf[Person], "The person"),
-        204 -> ApiResponse("Person not found"),
-        400 -> ApiResponse("Invalid request")
+        OK -> ApiResponseJson(classOf[Person], "The person"),
+        NO_CONTENT -> ApiResponse("Person not found"),
+        BAD_REQUEST -> ApiResponse("Invalid request")
       )
     )) { implicit context =>
       requestParam("id".as[Long]) { id =>
@@ -145,9 +147,9 @@ object Boot extends SparkApp with ThymeleafSparkApp with JacksonSparkApp with Sw
         PathParameter("id", "The person id")
       ),
       responses = ApiResponses(
-        200 -> ApiResponseJson(classOf[Person], "The person deleted"),
-        204 -> ApiResponse("Person not found"),
-        400 -> ApiResponse("Invalid request")
+        OK -> ApiResponseJson(classOf[Person], "The person deleted"),
+        NO_CONTENT -> ApiResponse("Person not found"),
+        BAD_REQUEST -> ApiResponse("Invalid request")
       )
     )) { implicit context =>
       requestParam("id".as[Long]) { id =>
