@@ -1,5 +1,6 @@
 package acsgh.spark.scala.files
 
+import  acsgh.spark.scala.implicits._
 import java.io.{ByteArrayOutputStream, InputStream}
 import java.math.BigInteger
 import java.net.{URI, URLConnection}
@@ -91,5 +92,5 @@ abstract class FileFilter extends Directives with LogSupport {
   }
 
 
-  private def uri(context: RequestContext) = Option(context.request.splat()).filter(_.nonEmpty).map(_ (0)).map(addTradingSlash).map(removeEndingSlash).getOrElse(URI.create(context.request.uri()).getPath)
+  private def uri(context: RequestContext) = Option(context.request.splat()).filter(_.nonEmpty).map(_ (0)).map(addTradingSlash).map(removeEndingSlash).getOrElse(context.request.getURI.getPath)
 }

@@ -2,6 +2,7 @@ package acsgh.spark.scala.handler
 
 import acsgh.spark.scala.directives.Directives
 import acsgh.spark.scala.{RequestContext, ResponseStatus}
+import com.acsgh.common.scala.log.LogSupport
 import spark.Response
 
 trait ErrorCodeHandler extends Directives {
@@ -12,7 +13,10 @@ trait ExceptionHandler extends Directives {
   def handle(exception: Exception)(implicit requestContext: RequestContext): Response
 }
 
-trait LoggingHandler extends ExceptionHandler {
-  def onStart()(implicit requestContext: RequestContext): Response
-  def onStop()(implicit requestContext: RequestContext): Response
+trait EventListener extends LogSupport {
+  def onStart()(implicit requestContext: RequestContext): Unit
+
+  def onStop()(implicit requestContext: RequestContext): Unit
+
+  def onException(exception: Exception)(implicit requestContext: RequestContext): Unit
 }
