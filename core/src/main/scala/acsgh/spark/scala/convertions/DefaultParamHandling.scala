@@ -52,6 +52,11 @@ trait DefaultParamHandling {
       param("Path", value)
     }
 
+    def cookieValue(implicit context: RequestContext): R = {
+      val value = context.cookieParams.find(_._1.equalsIgnoreCase(param.name)).map(_._2).toList
+      param("Cookie", value)
+    }
+
     def headerValue(implicit context: RequestContext): R = {
       val value = context.requestHeaders.find(_._1.equalsIgnoreCase(param.name)).map(_._2).getOrElse(List())
       param("Header", value)

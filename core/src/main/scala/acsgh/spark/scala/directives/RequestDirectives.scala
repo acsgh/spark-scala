@@ -5,7 +5,7 @@ import acsgh.spark.scala.ResponseStatus.UNSUPPORTED_MEDIA_TYPE
 import acsgh.spark.scala.convertions.{BodyReader, DefaultFormats, DefaultParamHandling}
 import spark.Response
 
-trait RequestDirectives extends DefaultParamHandling with DefaultFormats with RequestParamsDirectives with RequestHeaderDirectives with RequestQueryDirectives with RouteDirectives {
+trait RequestDirectives extends DefaultParamHandling with DefaultFormats with RequestParamsDirectives with RequestHeaderDirectives with RequestQueryDirectives with RequestCookieDirectives with RouteDirectives {
 
   def requestBody(action: Array[Byte] => Response)(implicit context: RequestContext): Response = action(context.request.bodyAsBytes())
 
