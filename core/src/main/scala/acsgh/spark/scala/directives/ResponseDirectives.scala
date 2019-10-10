@@ -1,7 +1,7 @@
 package acsgh.spark.scala.directives
 
 import acsgh.spark.scala.convertions.{BodyWriter, DefaultFormats, DefaultParamHandling, ParamWriter}
-import acsgh.spark.scala.{RequestContext, ResponseStatus}
+import acsgh.spark.scala.{HttpCookie, RequestContext, ResponseStatus}
 import spark.{Response, Service}
 
 trait ResponseDirectives extends DefaultParamHandling with DefaultFormats {
@@ -11,6 +11,10 @@ trait ResponseDirectives extends DefaultParamHandling with DefaultFormats {
   def responseHeader[T](name: String, value: T)(action: => Response)(implicit context: RequestContext, converter: ParamWriter[T]): Response = {
     context.response.header(name, converter.write(value))
     action
+  }
+
+  def responseCookie(input: HttpCookie)(action: => Response)(implicit context: RequestContext): Response = {
+    responseHeader("Set-Cookie", input.toValue)(action)
   }
 
   def responseStatus(input: ResponseStatus)(action: => Response)(implicit context: RequestContext): Response = {

@@ -32,4 +32,7 @@ package object implicits {
     }
   }
 
+  implicit class StringEnhancer(input: String) {
+    def toURI: URI = URI.create(input)
+  }
 }
