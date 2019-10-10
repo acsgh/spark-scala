@@ -8,31 +8,21 @@ trait SparkHandler extends SparkFilter {
 
   private var exceptionHandler: ExceptionHandler = new DefaultExceptionHandler()
   private var handlers: List[EventListener] = List()
+  private var handlerInitialized: Boolean = false
 
-  def initHandlers(): Unit = {
-    beforeAll { implicit ctx =>
-      handlers.foreach(_.onStart())
-      ctx.response
-    }
 
-    afterAfterAll { implicit ctx =>
-      handlers.foreach(_.onStop())
-      ctx.response
-    }
-
-    service.exception(classOf[java.lang.Exception], (exception: Exception, request: Request, response: Response) => {
-      implicit val ctx: RequestContext = toContext(request, response)
-      handlers.foreach(_.onException(exception))
-      exceptionHandler.handle(exception)
-    })
-
-  }
+  service.exception(classOf[java.lang.Exception], (exception: Exception, request: Request, response: Response) => {
+    implicit val ctx: RequestContext = toContext(request, response)
+    handlers.foreach(_.onException(exception))
+    exceptionHandler.handle(exception)
+  })
 
   def exceptionHandler(handler: ExceptionHandler): Unit = {
     exceptionHandler = handler
   }
 
   def addHandler(listener: EventListener): Unit = {
+    initHandlers()
     handlers = handlers ++ List(listener)
   }
 
@@ -52,5 +42,21 @@ trait SparkHandler extends SparkFilter {
       ""
     }
     method.invoke(null, code, route)
+  }
+
+  private def initHandlers(): Unit = {
+    if (!handlerInitialized) {
+      handlerInitialized = true
+
+      beforeAll { implicit ctx =>
+        handlers.foreach(_.onStart())
+        ctx.response
+      }
+
+      afterAfterAll { implicit ctx =>
+        handlers.foreach(_.onStop())
+        ctx.response
+      }
+    }
   }
 }
