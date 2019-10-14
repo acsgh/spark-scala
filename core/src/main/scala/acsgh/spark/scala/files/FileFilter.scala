@@ -38,7 +38,7 @@ abstract class FileFilter extends Directives with LogSupport {
                   context.response
                 }
               } else {
-                error(NOT_MODIFIED)
+                halt(NOT_MODIFIED)
               }
             }
           }

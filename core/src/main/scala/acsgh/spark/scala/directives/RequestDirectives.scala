@@ -10,14 +10,18 @@ trait RequestDirectives extends DefaultParamHandling with DefaultFormats with Re
   def requestBody(action: Array[Byte] => Response)(implicit context: RequestContext): Response = action(context.request.bodyAsBytes())
 
   def requestBody[T](action: T => Response)(implicit context: RequestContext, reader: BodyReader[T]): Response = {
-    requestHeader("Content-Type") { contentType =>
+    if (reader.strictContentTypes) {
+      requestHeader("Content-Type") { contentType =>
 
-      if (!context.validContentType(reader.contentTypes, contentType)) {
-        error(UNSUPPORTED_MEDIA_TYPE)
-      } else {
-        action(reader.read(context.request.bodyAsBytes))
+        if (!context.validContentType(reader.contentTypes, contentType)) {
+          halt(UNSUPPORTED_MEDIA_TYPE)
+        } else {
+          action(reader.read(context.request.bodyAsBytes))
+        }
+
       }
-
+    } else {
+      action(reader.read(context.request.bodyAsBytes))
     }
   }
 }
