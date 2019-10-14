@@ -11,6 +11,8 @@ trait ParamWriter[T] {
 trait BodyReader[T] {
   val contentTypes: Set[String] = Set()
 
+  val strictContentTypes : Boolean = false
+
   def read(body: Array[Byte]): T
 }
 

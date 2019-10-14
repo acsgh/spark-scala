@@ -14,8 +14,13 @@ trait RouteDirectives extends ResponseDirectives {
     context.response
   }
 
-  def error(status: ResponseStatus = ResponseStatus.INTERNAL_SERVER_ERROR, message: Option[String] = None)(implicit context: RequestContext): Response = {
-    service.halt(status.code, message.getOrElse(status.message))
+  def halt(input: ResponseStatus)(implicit context: RequestContext): Response = {
+    service.halt(input.code)
+    context.response
+  }
+
+  def halt(input: ResponseStatus, message: String)(implicit context: RequestContext): Response = {
+    service.halt(input.code, message)
     context.response
   }
 

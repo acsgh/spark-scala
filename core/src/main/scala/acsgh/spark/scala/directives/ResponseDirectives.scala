@@ -22,16 +22,6 @@ trait ResponseDirectives extends DefaultParamHandling with DefaultFormats {
     action
   }
 
-  def halt(input: ResponseStatus)(implicit context: RequestContext): Response = {
-    service.halt(input.code)
-    context.response
-  }
-
-  def halt(input: ResponseStatus, message: String)(implicit context: RequestContext): Response = {
-    service.halt(input.code, message)
-    context.response
-  }
-
   def responseBody(input: Array[Byte])(implicit context: RequestContext): Response = {
     context.response.body("")
     context.response.raw().getOutputStream.write(input)

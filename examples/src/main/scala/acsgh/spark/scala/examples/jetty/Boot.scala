@@ -112,7 +112,7 @@ object Boot extends SparkApp with ThymeleafSparkApp with JacksonSparkApp with Sw
     )) { implicit context =>
       requestParam("id".as[Long]) { id =>
         requestJson(classOf[Person]) { personNew =>
-          persons.get(id).fold(error(ResponseStatus.NO_CONTENT)) { personOld =>
+          persons.get(id).fold(halt(ResponseStatus.NO_CONTENT)) { personOld =>
             val result = personNew.copy(id = id)
             persons = persons + (result.id -> result)
             responseJson(result)
@@ -134,7 +134,7 @@ object Boot extends SparkApp with ThymeleafSparkApp with JacksonSparkApp with Sw
       )
     )) { implicit context =>
       requestParam("id".as[Long]) { id =>
-        persons.get(id).fold(error(ResponseStatus.NO_CONTENT)) { personOld =>
+        persons.get(id).fold(halt(ResponseStatus.NO_CONTENT)) { personOld =>
           responseJson(personOld)
         }
       }
@@ -153,7 +153,7 @@ object Boot extends SparkApp with ThymeleafSparkApp with JacksonSparkApp with Sw
       )
     )) { implicit context =>
       requestParam("id".as[Long]) { id =>
-        persons.get(id).fold(error(ResponseStatus.NO_CONTENT)) { personOld =>
+        persons.get(id).fold(halt(ResponseStatus.NO_CONTENT)) { personOld =>
           persons = persons - id
           responseJson(personOld)
         }
@@ -164,14 +164,5 @@ object Boot extends SparkApp with ThymeleafSparkApp with JacksonSparkApp with Sw
   //    requestString { input =>
   //      responseBody(s"You said: $input")
   //    }
-  //  }
-  //
-  //
-  //  filter("/*") { implicit context =>
-  //    nextJump =>
-  //      log.info("Handling: {}", context.request.uri)
-  //      val result = nextJump()
-  //      log.info("Handling: {} - {}, done", context.request.uri, context.response.responseStatus)
-  //      result
   //  }
 }
