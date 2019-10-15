@@ -19,7 +19,7 @@ trait TwirlSupport extends Directives {
   }
 
   implicit object TwirlBodyWriter extends BodyWriter[HtmlFormat.Appendable] {
-    override val contentType: String = "text/html"
+    override val contentType: String = "text/html; charset=UTF-8"
 
     override def write(input: HtmlFormat.Appendable): Array[Byte] = {
       val body = if (productionMode) htmlCompressorFilter.compress(input.body) else input.body
