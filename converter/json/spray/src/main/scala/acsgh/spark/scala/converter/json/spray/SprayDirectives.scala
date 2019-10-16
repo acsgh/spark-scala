@@ -10,10 +10,10 @@ import spray.json._
 trait SprayDirectives {
   directives: Directives =>
 
-  protected def reader[T](clazz: Class[T], strictContentTypes: Boolean = false)(implicit jsonReader: JsonReader[T]): BodyReader[T] = new BodyReader[T] {
+  protected def reader[T](clazz: Class[T], hasStrictContentTypes: Boolean = false)(implicit jsonReader: JsonReader[T]): BodyReader[T] = new BodyReader[T] {
     override val contentTypes: Set[String] = Set("application/json")
 
-    override val strictContentTypes: Boolean = strictContentTypes
+    override val strictContentTypes: Boolean = hasStrictContentTypes
 
     override def read(body: Array[Byte]): T = {
       try {
