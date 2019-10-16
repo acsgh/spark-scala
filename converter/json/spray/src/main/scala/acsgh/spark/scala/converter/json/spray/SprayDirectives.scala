@@ -26,7 +26,7 @@ trait SprayDirectives {
 
   protected def writer[T]()(implicit jsonWriter: JsonWriter[T]): BodyWriter[T] = new BodyWriter[T] {
 
-    override val contentType: String = "application/json"
+    override val contentType: String = "application/json; charset=UTF-8"
 
     override def write(body: T): Array[Byte] = {
       try {
