@@ -30,7 +30,7 @@ trait SprayDirectives {
 
     override def write(body: T): Array[Byte] = {
       try {
-        val json = if (productionMode) {
+        val json = if (spark.productionMode) {
           body.toJson.compactPrint
         } else {
           body.toJson.prettyPrint

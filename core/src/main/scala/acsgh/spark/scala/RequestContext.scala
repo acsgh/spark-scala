@@ -3,7 +3,7 @@ package acsgh.spark.scala
 import acsgh.spark.scala.implicits._
 import spark.{Request, Response}
 
-import scala.collection.JavaConverters._
+import scala.jdk.CollectionConverters._
 
 case class RequestContext
 (

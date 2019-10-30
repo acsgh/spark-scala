@@ -3,6 +3,8 @@ package acsgh.spark.scala.convertions
 import acsgh.spark.scala.RequestContext
 import acsgh.spark.scala.directives._
 
+import scala.language.implicitConversions
+
 trait DefaultParamHandling {
 
   implicit object StringWriter extends ParamWriter[String] {

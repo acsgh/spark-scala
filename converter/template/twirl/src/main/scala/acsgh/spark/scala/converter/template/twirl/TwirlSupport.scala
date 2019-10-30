@@ -22,7 +22,7 @@ trait TwirlSupport extends Directives {
     override val contentType: String = "text/html; charset=UTF-8"
 
     override def write(input: HtmlFormat.Appendable): Array[Byte] = {
-      val body = if (productionMode) htmlCompressorFilter.compress(input.body) else input.body
+      val body = if (spark.productionMode) htmlCompressorFilter.compress(input.body) else input.body
       body.getBytes("UTF-8")
     }
   }

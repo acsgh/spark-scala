@@ -17,7 +17,7 @@ import io.swagger.v3.oas.models.security.SecurityRequirement
 import io.swagger.v3.oas.models.servers.{Server, ServerVariable, ServerVariables}
 import io.swagger.v3.oas.models.tags.Tag
 
-import scala.collection.JavaConverters._
+import scala.jdk.CollectionConverters._
 
 object OpenApiBuilderDefault extends OpenApiBuilder {
 
@@ -180,7 +180,7 @@ trait OpenApiBuilder {
     values: Map[String, List[String]] = null,
   ): SecurityRequirement = {
     val result = new SecurityRequirement()
-    result.putAll(values.mapValues(_.asJava).toMap.asJava)
+    result.putAll(values.view.mapValues(_.asJava).toMap.asJava)
     result
   }
 

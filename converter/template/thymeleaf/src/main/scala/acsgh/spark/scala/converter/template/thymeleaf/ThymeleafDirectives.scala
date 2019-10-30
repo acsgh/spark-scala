@@ -8,6 +8,8 @@ import org.thymeleaf.TemplateEngine
 import org.thymeleaf.context.Context
 import spark.Response
 
+import scala.language.implicitConversions
+
 trait ThymeleafDirectives {
   directives: Directives =>
 

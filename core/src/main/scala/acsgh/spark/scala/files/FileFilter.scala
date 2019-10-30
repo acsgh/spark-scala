@@ -81,7 +81,7 @@ abstract class FileFilter extends Directives {
     try {
       val buffer = new Array[Byte](1024)
 
-      Stream.continually(input.read(buffer))
+      LazyList.continually(input.read(buffer))
         .takeWhile(_ != -1)
         .foreach(output.write(buffer, 0, _))
 
