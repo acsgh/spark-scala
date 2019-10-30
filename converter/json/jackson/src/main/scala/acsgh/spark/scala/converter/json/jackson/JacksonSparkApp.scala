@@ -12,7 +12,7 @@ trait JacksonSparkApp extends JacksonDirectives {
   protected implicit val objectMapper: ObjectMapper = {
     val mapper = new ObjectMapper with ScalaObjectMapper
     mapper.registerModule(DefaultScalaModule)
-    mapper.configure(SerializationFeature.INDENT_OUTPUT, !productionMode)
+    mapper.configure(SerializationFeature.INDENT_OUTPUT, !app.productionMode)
     mapper
   }
 }

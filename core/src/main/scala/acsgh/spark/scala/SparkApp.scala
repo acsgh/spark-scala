@@ -2,13 +2,15 @@ package acsgh.spark.scala
 
 import com.acsgh.common.scala.App
 
-trait SparkApp extends App with Spark {
+trait SparkApp extends App with SparkDelegate {
+
+  protected val spark: Spark = Spark()
 
   onStart {
-    service.init()
+    spark.start()
   }
 
   onStop {
-    service.stop()
+    spark.stop()
   }
 }

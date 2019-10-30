@@ -34,9 +34,7 @@ object DefaultExceptionHandler {
   }
 }
 
-class DefaultExceptionHandler extends ExceptionHandler {
-
-  protected val service: Service = Spark.service
+class DefaultExceptionHandler(override val spark: Spark) extends ExceptionHandler {
 
   override def handle(exception: Exception)(implicit ctx: RequestContext): Response = {
     val status = if (exception.isInstanceOf[BadRequestException]) ResponseStatus.BAD_REQUEST else ResponseStatus.INTERNAL_SERVER_ERROR
@@ -52,7 +50,7 @@ class DefaultExceptionHandler extends ExceptionHandler {
        |</head>
        |<body>
        |   <h2>${status.code} - ${status.message}</h2>
-       |   ${if (productionMode) "" else DefaultExceptionHandler.stacktraceToHtml(throwable)}
+       |   ${if (spark.productionMode) "" else DefaultExceptionHandler.stacktraceToHtml(throwable)}
        |</body>
        |</html>""".stripMargin
   }

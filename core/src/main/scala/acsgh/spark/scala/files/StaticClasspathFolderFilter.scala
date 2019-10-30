@@ -4,9 +4,9 @@ import java.net.URL
 import java.time.Instant
 import java.util.Date
 
-import spark.Service
+import acsgh.spark.scala.Spark
 
-case class StaticClasspathFolderFilter(private val baseFolder: String, classLoader: ClassLoader = Thread.currentThread().getContextClassLoader)(implicit protected val service:Service) extends FileFilter {
+case class StaticClasspathFolderFilter(private val baseFolder: String, classLoader: ClassLoader = Thread.currentThread().getContextClassLoader)(implicit protected val spark: Spark) extends FileFilter {
 
   override def getFileInfo(fileName: String): Option[FileInfo] = {
     val file = baseFolder + addTradingSlash(fileName)

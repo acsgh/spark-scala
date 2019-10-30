@@ -18,7 +18,7 @@ object FileFilter {
   val DATE_FORMATTER = new SimpleDateFormat("EEE, dd MMM yyyy HH:mm:ss zzz")
 }
 
-abstract class FileFilter extends Directives with LogSupport {
+abstract class FileFilter extends Directives {
 
   def handle(context: RequestContext): Response = {
     implicit val ctx: RequestContext = context
@@ -34,7 +34,7 @@ abstract class FileFilter extends Directives with LogSupport {
               if (fileInfo.isModified(ifNoneMatchHeader, ifModifiedSinceHeader)) {
                 responseStatus(OK) {
                   responseBody(fileInfo.content)
-                  service.halt()
+                  spark.halt(OK)
                   context.response
                 }
               } else {

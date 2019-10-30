@@ -6,6 +6,7 @@ import acsgh.spark.scala.ResponseStatus._
 import acsgh.spark.scala.{ResponseStatus, SparkApp}
 import acsgh.spark.scala.converter.json.jackson.JacksonSparkApp
 import acsgh.spark.scala.converter.template.thymeleaf.ThymeleafSparkApp
+import acsgh.spark.scala.handler.LoggingEventListener
 import acsgh.spark.scala.support.swagger.SwaggerRoutes
 import io.swagger.v3.oas.models.OpenAPI
 
@@ -13,7 +14,6 @@ import io.swagger.v3.oas.models.OpenAPI
 object Boot extends SparkApp with ThymeleafSparkApp with JacksonSparkApp with SwaggerRoutes {
   override val name: String = "Jetty Boot Example"
 
-  //  override protected val httpPort: Option[Int] = Some(7654)
   override protected val prefix: String = "/templates/"
 
   implicit protected val openApi: OpenAPI = OpenAPI(
@@ -26,6 +26,8 @@ object Boot extends SparkApp with ThymeleafSparkApp with JacksonSparkApp with Sw
       )
     ),
   )
+
+  addHandler(new LoggingEventListener(spark))
 
   swaggerRoutes()
 
@@ -41,8 +43,7 @@ object Boot extends SparkApp with ThymeleafSparkApp with JacksonSparkApp with Sw
   get("/version") { implicit context =>
     responseBody("Hello!")
   }
-  //
-  //
+
   resourceFolder("/*", "public")
   webjars()
 

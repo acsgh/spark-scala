@@ -1,13 +1,11 @@
 package acsgh.spark.scala.directives
 
-import java.net.URI
-
-import acsgh.spark.scala.{RedirectStatus, RequestContext, ResponseStatus}
-import spark.{Response, Service}
+import acsgh.spark.scala.{RedirectStatus, RequestContext, ResponseStatus, Spark}
+import spark.Response
 
 trait RouteDirectives extends ResponseDirectives {
 
-  protected val service: Service
+  protected def spark: Spark
 
   def redirect(url: String, redirectStatus: RedirectStatus = RedirectStatus.FOUND)(implicit context: RequestContext): Response = {
     context.response.redirect(url, redirectStatus.status.code)
@@ -15,17 +13,12 @@ trait RouteDirectives extends ResponseDirectives {
   }
 
   def halt(input: ResponseStatus)(implicit context: RequestContext): Response = {
-    service.halt(input.code)
+    spark.halt(input)
     context.response
   }
 
-  def halt(input: ResponseStatus, message: String)(implicit context: RequestContext): Response = {
-    service.halt(input.code, message)
+  def halt(input: ResponseStatus, message: String = null)(implicit context: RequestContext): Response = {
+    spark.halt(input, message)
     context.response
   }
-
-//  def serve(url: String)(implicit context: RequestContext): Response = {
-//
-//    context.router.process(context.request.copy(uri = URI.create(url)))
-//  }
 }

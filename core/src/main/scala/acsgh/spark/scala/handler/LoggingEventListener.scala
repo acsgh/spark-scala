@@ -7,19 +7,17 @@ import acsgh.spark.scala.{RequestContext, Spark}
 import com.acsgh.common.scala.time.TimerSplitter
 import spark.Service
 
-class LoggingEventListener() extends EventListener {
-
-  protected val service: Service = Spark.service
+class LoggingEventListener(override val spark: Spark) extends EventListener {
 
   def onStart()(implicit ctx: RequestContext): Unit = {
-    log.debug(s"Request:  ${ctx.request.requestMethod} ${ctx.request.uri}")
+    log.info(s"Request:  ${ctx.request.requestMethod} ${ctx.request.uri}")
     ctx.request.saveStartTime()
   }
 
   def onStop()(implicit ctx: RequestContext): Unit = {
     val duration = ctx.request.timeSpent
 
-    log.debug(s"Response: ${ctx.request.requestMethod} ${ctx.request.uri} with ${ctx.response.status()} in ${TimerSplitter.getIntervalInfo(duration, TimeUnit.MILLISECONDS)}")
+    log.info(s"Response: ${ctx.request.requestMethod} ${ctx.request.uri} with ${ctx.response.status()} in ${TimerSplitter.getIntervalInfo(duration, TimeUnit.MILLISECONDS)}")
   }
 
   def onException(exception: Exception)(implicit ctx: RequestContext): Unit = {

@@ -1,12 +1,13 @@
 package acsgh.spark.scala.support.swagger
 
+import acsgh.spark.scala.directives.Directives
 import acsgh.spark.scala.support.swagger.dsl.OpenApiBuilder
-import acsgh.spark.scala.{RequestContext, Spark}
+import acsgh.spark.scala.{RequestContext, Spark, SparkDelegate}
 import io.swagger.v3.core.util.{Json, Yaml}
 import io.swagger.v3.oas.models.{OpenAPI, Operation, PathItem, Paths}
 import spark.Response
 
-trait SwaggerRoutes extends Spark with OpenApiBuilder {
+trait SwaggerRoutes extends SparkDelegate with OpenApiBuilder {
 
   def swaggerRoutes(docPath: String = "/api-docs")(implicit openAPi: OpenAPI): Unit = {
     webjars()

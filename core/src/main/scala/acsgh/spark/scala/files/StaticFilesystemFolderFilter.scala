@@ -4,9 +4,9 @@ import java.io.{File, FileInputStream, FileNotFoundException}
 import java.time.Instant
 import java.util.Date
 
-import spark.Service
+import acsgh.spark.scala.Spark
 
-case class StaticFilesystemFolderFilter(private val baseFolder: File)(implicit protected val service: Service) extends FileFilter {
+case class StaticFilesystemFolderFilter(private val baseFolder: File)(implicit protected val spark: Spark) extends FileFilter {
 
   if (!baseFolder.exists || !baseFolder.isDirectory) throw new FileNotFoundException("Folder " + baseFolder.getAbsolutePath + " does not exist or is not a folder")
 
