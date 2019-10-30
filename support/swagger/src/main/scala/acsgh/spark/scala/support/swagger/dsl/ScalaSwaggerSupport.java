@@ -61,7 +61,7 @@ public class ScalaSwaggerSupport extends ModelResolver {
                     if (!context.getDefinedModels().containsKey(enumName)) {
                         StringSchema enumModel = new StringSchema();
 
-                        VectorIterator iterator = ((Vector) enumClass.getDeclaredMethod("values").invoke(null)).iterator();
+                        scala.collection.Iterator iterator = ((Vector) enumClass.getDeclaredMethod("values").invoke(null)).iterator();
 
                         while (iterator.hasNext()) {
                             enumModel.addEnumItem(iterator.next().toString());

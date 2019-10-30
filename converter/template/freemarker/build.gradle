@@ -1,7 +1,0 @@
-dependencies {
-    compile project(":core")
-
-    compile 'org.freemarker:freemarker:2.3.28'
-}
-
-apply plugin: 'acsgh-publish'

@@ -1,7 +1,0 @@
-dependencies {
-    compile "com.github.acsgh.common.scala:core_2.12:1.0.4"
-
-    compile "com.sparkjava:spark-core:$SPARK_JAVA_VERSION"
-}
-
-apply plugin: 'acsgh-publish'

@@ -1,12 +1,17 @@
-language: java
+language: scala
+
+scala:
+  - 2.13.1
+
 jdk:
-  - openjdk11
-before_cache:
-  - rm -f  $HOME/.gradle/caches/modules-2/modules-2.lock
-  - rm -fr $HOME/.gradle/caches/*/plugin-resolution/
+  - oraclejdk11
+
+branches:
+  only:
+    - master
+
 cache:
   directories:
-    - "$HOME/.gradle/caches/"
-    - "$HOME/.gradle/wrapper/"
-script:
-  - "./gradlew assemble"
+    - $HOME/.ivy2/cache
+    - $HOME/.sbt/boot
+    - $HOME/.coursier
