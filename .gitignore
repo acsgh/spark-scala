@@ -3,6 +3,9 @@ build/
 classes/
 node_modules/
 out/
+project/target/
+project/project/
+target/
 
 .directory
 
