@@ -159,8 +159,8 @@ lazy val supportSwagger = (project in file("support/swagger"))
 
 lazy val examples = (project in file("examples"))
   .settings(
-    organization := "com.github.acsgh.mad.scala.examples",
-    name := "netty",
+    organization := "com.github.acsgh.mad.scala",
+    name := "examples",
     commonSettings,
     libraryDependencies ++= Seq(
       "org.webjars" % "bootstrap" % "3.3.7-1",
