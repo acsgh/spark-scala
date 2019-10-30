@@ -21,6 +21,8 @@ lazy val commonSettings = Seq(
     commitNextVersion,
     pushChanges
   ),
+  crossScalaVersions := List("2.12.10", "2.13.1"),
+  releaseCrossBuild := true,
   releasePublishArtifactsAction := PgpKeys.publishSigned.value,
   libraryDependencies ++= Seq(
     "com.beachape" %% "enumeratum" % "1.5.13",
@@ -53,7 +55,9 @@ lazy val commonSettings = Seq(
 lazy val root = (project in file("."))
   .settings(
     name := "spark-scala",
-    commonSettings
+    commonSettings,
+    crossScalaVersions := Nil,
+    publish / skip := true
   )
   .aggregate(
     core,
@@ -78,7 +82,7 @@ lazy val core = (project in file("core"))
 
 lazy val converterJsonJackson = (project in file("converter/json/jackson"))
   .settings(
-    organization := "com.github.acsgh.mad.scala.converter.json",
+    organization := "com.github.acsgh.spark.scala.converter.json",
     name := "jackson",
     commonSettings,
     libraryDependencies ++= Seq(
@@ -90,7 +94,7 @@ lazy val converterJsonJackson = (project in file("converter/json/jackson"))
 
 lazy val converterJsonSpray = (project in file("converter/json/spray"))
   .settings(
-    organization := "com.github.acsgh.mad.scala.converter.json",
+    organization := "com.github.acsgh.spark.scala.converter.json",
     name := "spray",
     commonSettings,
     libraryDependencies ++= Seq(
@@ -101,7 +105,7 @@ lazy val converterJsonSpray = (project in file("converter/json/spray"))
 
 lazy val converterTemplateFreemarker = (project in file("converter/template/freemarker"))
   .settings(
-    organization := "com.github.acsgh.mad.scala.converter.template",
+    organization := "com.github.acsgh.spark.scala.converter.template",
     name := "freemarker",
     commonSettings,
     libraryDependencies ++= Seq(
@@ -113,7 +117,7 @@ lazy val converterTemplateFreemarker = (project in file("converter/template/free
 
 lazy val converterTemplateThymeleaf = (project in file("converter/template/thymeleaf"))
   .settings(
-    organization := "com.github.acsgh.mad.scala.converter.template",
+    organization := "com.github.acsgh.spark.scala.converter.template",
     name := "thymeleaf",
     commonSettings,
     libraryDependencies ++= Seq(
@@ -125,7 +129,7 @@ lazy val converterTemplateThymeleaf = (project in file("converter/template/thyme
 
 lazy val converterTemplateTwirl = (project in file("converter/template/twirl"))
   .settings(
-    organization := "com.github.acsgh.mad.scala.converter.template",
+    organization := "com.github.acsgh.spark.scala.converter.template",
     name := "twirl",
     commonSettings,
     libraryDependencies ++= Seq(
@@ -137,7 +141,7 @@ lazy val converterTemplateTwirl = (project in file("converter/template/twirl"))
 
 lazy val supportSwagger = (project in file("support/swagger"))
   .settings(
-    organization := "com.github.acsgh.mad.scala.support",
+    organization := "com.github.acsgh.spark.scala.support",
     name := "swagger",
     commonSettings,
     libraryDependencies ++= Seq(
@@ -153,7 +157,7 @@ lazy val supportSwagger = (project in file("support/swagger"))
 
 lazy val examples = (project in file("examples"))
   .settings(
-    organization := "com.github.acsgh.mad.scala",
+    organization := "com.github.acsgh.spark.scala",
     name := "examples",
     commonSettings,
     libraryDependencies ++= Seq(
